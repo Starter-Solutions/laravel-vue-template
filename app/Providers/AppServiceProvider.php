@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Inertia\ExceptionResponse;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +27,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        Inertia::handleExceptionsUsing(function (ExceptionResponse $exception): ?ExceptionResponse {
+            if ($exception->statusCode() !== 404 || $exception->response instanceof JsonResponse) {
+                return null;
+            }
+
+            return $exception->render('NotFound');
+        });
     }
 
     /**
