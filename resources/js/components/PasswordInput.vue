@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Eye, EyeOff } from '@lucide/vue';
+import { cn } from '@starter-solutions/vue-ui';
 import { ref, useTemplateRef } from 'vue';
 import type { HTMLAttributes } from 'vue';
 import { Input } from '@starter-solutions/vue-ui/base/input';
-import { cn } from '@/lib/utils';
 
 defineOptions({ inheritAttrs: false });
 
