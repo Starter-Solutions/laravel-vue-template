@@ -12,6 +12,7 @@ import { Label } from '@starter-solutions/vue-ui/base/label';
 import { edit } from '@/routes/profile';
 
 defineProps<{
+    isAdmin: boolean;
     verificationUrl: string | null;
 }>();
 
@@ -39,7 +40,11 @@ const user = computed(() => page.props.auth.user);
         <Heading
             variant="small"
             title="Profile"
-            description="Update your name and email address"
+            :description="
+                isAdmin
+                    ? 'Update your name'
+                    : 'Update your name and email address'
+            "
         />
 
         <Form
@@ -69,6 +74,7 @@ const user = computed(() => page.props.auth.user);
                     class="mt-1 block w-full"
                     name="email"
                     :default-value="user.email"
+                    :readonly="isAdmin"
                     required
                     autocomplete="username"
                     placeholder="Email address"
@@ -105,5 +111,5 @@ const user = computed(() => page.props.auth.user);
         </Form>
     </div>
 
-    <DeleteUser />
+    <DeleteUser v-if="!isAdmin" />
 </template>

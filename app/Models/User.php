@@ -35,6 +35,16 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
 
+    public function isAdmin(): bool
+    {
+        return self::isAdminEmail($this->email);
+    }
+
+    public static function isAdminEmail(string $email): bool
+    {
+        return in_array(mb_strtolower(trim($email)), config()->array('admin.emails'), true);
+    }
+
     public function sendEmailVerificationNotification(): void
     {
         if (Features::enabled(Features::emailVerification())) {

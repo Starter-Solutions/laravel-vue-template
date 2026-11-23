@@ -19,8 +19,14 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        $profileRules = $this->profileRules();
+
+        if (is_string($input['email'] ?? null) && User::isAdminEmail($input['email'])) {
+            $profileRules['email'][] = 'prohibited';
+        }
+
         Validator::make($input, [
-            ...$this->profileRules(),
+            ...$profileRules,
             'password' => $this->passwordRules(),
         ])->validate();
 

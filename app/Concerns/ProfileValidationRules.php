@@ -23,6 +23,20 @@ trait ProfileValidationRules
     }
 
     /**
+     * @return array<string, array<int, Unique|ValidationRule|array<mixed>|string>>
+     */
+    protected function profileUpdateRules(User $user, mixed $email): array
+    {
+        $rules = $this->profileRules($user->id);
+
+        if (is_string($email) && $email !== $user->email && ($user->isAdmin() || User::isAdminEmail($email))) {
+            $rules['email'][] = 'prohibited';
+        }
+
+        return $rules;
+    }
+
+    /**
      * Get the validation rules used to validate user names.
      *
      * @return array<int, Unique|ValidationRule|array<mixed>|string>

@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, Layers, LayoutGrid } from '@lucide/vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import {
+    BookOpen,
+    FolderGit2,
+    Layers,
+    LayoutGrid,
+    Shield,
+    Users,
+} from '@lucide/vue';
+import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -15,7 +23,16 @@ import {
     SidebarMenuItem,
 } from '@starter-solutions/vue-ui/base/sidebar';
 import { dashboard } from '@/routes';
+import { index as usersIndex } from '@/routes/admin/users';
 import type { NavGroup, NavItem } from '@/types';
+
+const page = usePage();
+
+const adminGroup: NavGroup = {
+    title: 'Admin',
+    icon: Shield,
+    items: [{ title: 'Users', href: usersIndex(), icon: Users }],
+};
 
 const navGroups: NavGroup[] = [
     {
@@ -30,6 +47,10 @@ const navGroups: NavGroup[] = [
         ],
     },
 ];
+
+const visibleNavGroups = computed(() =>
+    page.props.auth.canManageUsers ? [adminGroup, ...navGroups] : navGroups,
+);
 
 const footerNavItems: NavItem[] = [
     {
@@ -64,7 +85,7 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :groups="navGroups" />
+            <NavMain :groups="visibleNavGroups" />
         </SidebarContent>
 
         <SidebarFooter>

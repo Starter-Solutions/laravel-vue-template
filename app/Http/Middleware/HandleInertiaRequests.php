@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Laravel\Fortify\Features;
@@ -42,6 +43,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'canManageUsers' => Gate::allows('manage-users'),
                 'registrationUrl' => Features::enabled(Features::registration()) && Route::has('register')
                     ? route('register', absolute: false)
                     : null,

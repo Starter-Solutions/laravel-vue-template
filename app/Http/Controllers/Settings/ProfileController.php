@@ -21,6 +21,7 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('settings/Profile', [
+            'isAdmin' => $request->user()->isAdmin(),
             'verificationUrl' => Features::enabled(Features::emailVerification()) && $request->user() instanceof MustVerifyEmail
                 ? route('verification.send', absolute: false)
                 : null,
