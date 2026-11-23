@@ -24,7 +24,7 @@ class UserController extends Controller
         return Inertia::render('admin/Users', [
             'users' => User::query()->dataTable(
                 tableKey: 'users',
-                columns: ['id', 'name', 'email'],
+                columns: ['id', 'name', 'email', 'email_verified_at'],
                 defaultPerPage: 15,
                 defaultSortBy: 'id',
                 defaultDescending: true,
@@ -33,6 +33,7 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'email_verified' => $user->hasVerifiedEmail(),
                 'is_admin' => $user->isAdmin(),
             ]),
         ]);

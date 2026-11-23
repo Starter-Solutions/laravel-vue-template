@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { ArrowDown, ArrowDownUp, ArrowUp, Ellipsis, Plus } from '@lucide/vue';
+import {
+    ArrowDown,
+    ArrowDownUp,
+    ArrowUp,
+    BadgeCheck,
+    BadgeMinus,
+    Ellipsis,
+    Plus,
+} from '@lucide/vue';
 import { useLaravelPagination } from '@starter-solutions/inertia-data-table-vue';
 import type { Paginated } from '@starter-solutions/inertia-data-table-vue';
 import {
@@ -41,6 +49,12 @@ import {
     TableHeader,
     TableRow,
 } from '@starter-solutions/vue-ui/base/table';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@starter-solutions/vue-ui/base/tooltip';
 import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import {
@@ -55,7 +69,13 @@ type ListedUser = {
     id: number;
     name: string;
     email: string;
+    email_verified: boolean;
     is_admin: boolean;
+};
+
+const verificationStatus = {
+    verified: 'Email verified',
+    unverified: 'Email not verified',
 };
 
 const props = defineProps<{ users: Paginated<ListedUser> }>();
@@ -221,7 +241,45 @@ function deleteUser() {
                                 </Badge>
                             </div>
                         </TableCell>
-                        <TableCell>{{ user.email }}</TableCell>
+                        <TableCell>
+                            <div class="flex items-center gap-2">
+                                {{ user.email }}
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger as-child>
+                                            <span
+                                                role="img"
+                                                tabindex="0"
+                                                class="inline-flex shrink-0 rounded-sm"
+                                                :aria-label="
+                                                    user.email_verified
+                                                        ? verificationStatus.verified
+                                                        : verificationStatus.unverified
+                                                "
+                                            >
+                                                <BadgeCheck
+                                                    v-if="user.email_verified"
+                                                    aria-hidden="true"
+                                                    class="size-4 text-blue-600 dark:text-blue-400"
+                                                />
+                                                <BadgeMinus
+                                                    v-else
+                                                    aria-hidden="true"
+                                                    class="size-4 text-muted-foreground"
+                                                />
+                                            </span>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            {{
+                                                user.email_verified
+                                                    ? verificationStatus.verified
+                                                    : verificationStatus.unverified
+                                            }}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
+                        </TableCell>
                         <TableCell class="text-right">
                             <DropdownMenu>
                                 <DropdownMenuTrigger as-child>

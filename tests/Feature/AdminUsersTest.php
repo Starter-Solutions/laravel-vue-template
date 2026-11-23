@@ -35,6 +35,7 @@ test('only configured admins can see the users navigation and access the table',
             ->where('users.data.0.is_admin', false)
             ->where('users.data.1.id', $this->admin->id)
             ->where('users.data.1.is_admin', true)
+            ->where('users.data.1.email_verified', true)
             ->missing('users.data.1.password'));
 });
 
@@ -54,7 +55,7 @@ test('nonadmins cannot create, edit, reset or delete accounts through the admin 
 
 test('the users table supports sorting and pagination', function () {
     User::factory()->create(['name' => 'Alpha']);
-    $second = User::factory()->create(['name' => 'Beta']);
+    $second = User::factory()->unverified()->create(['name' => 'Beta']);
     $this->admin->update(['name' => 'Gamma']);
 
     $this->actingAs($this->admin)
@@ -70,7 +71,8 @@ test('the users table supports sorting and pagination', function () {
             ->where('users.last_page', 3)
             ->where('users.sort_by', 'name')
             ->has('users.data', 1)
-            ->where('users.data.0.id', $second->id));
+            ->where('users.data.0.id', $second->id)
+            ->where('users.data.0.email_verified', false));
 });
 
 test('admins can edit and delete regular accounts but admin accounts cannot be deleted', function () {
