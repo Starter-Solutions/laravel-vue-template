@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { KeyRound, Trash2 } from '@lucide/vue';
 import { ref } from 'vue';
-import { Button } from '@/components/ui/button';
+import { Button } from '@starter-solutions/vue-ui/base/button';
 import {
     Dialog,
     DialogClose,
@@ -10,7 +10,7 @@ import {
     DialogFooter,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@starter-solutions/vue-ui/base/dialog';
 import type { Passkey } from '@/types/auth';
 
 const props = defineProps<{

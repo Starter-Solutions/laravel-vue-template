@@ -7,7 +7,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
+} from '@starter-solutions/vue-ui/base/card';
 import { home } from '@/routes';
 
 defineProps<{

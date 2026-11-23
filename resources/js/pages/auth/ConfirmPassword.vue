@@ -2,9 +2,9 @@
 import { Form, Head } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@starter-solutions/vue-ui/base/button';
+import { Label } from '@starter-solutions/vue-ui/base/label';
+import { Spinner } from '@starter-solutions/vue-ui/base/spinner';
 import { store } from '@/routes/password/confirm';
 import {
     index as confirmOptions,

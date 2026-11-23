@@ -3,10 +3,10 @@ import { Form, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@starter-solutions/vue-ui/base/button';
+import { Input } from '@starter-solutions/vue-ui/base/input';
+import { Label } from '@starter-solutions/vue-ui/base/label';
+import { Spinner } from '@starter-solutions/vue-ui/base/spinner';
 import { update } from '@/routes/password';
 
 defineOptions({

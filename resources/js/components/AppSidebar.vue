@@ -13,7 +13,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from '@starter-solutions/vue-ui/base/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 

@@ -5,7 +5,7 @@ import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileCo
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
+import { Button } from '@starter-solutions/vue-ui/base/button';
 import {
     Dialog,
     DialogClose,
@@ -15,8 +15,8 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+} from '@starter-solutions/vue-ui/base/dialog';
+import { Label } from '@starter-solutions/vue-ui/base/label';
 
 const passwordInput = useTemplateRef('passwordInput');
 </script>

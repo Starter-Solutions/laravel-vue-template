@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { AlertCircle } from '@lucide/vue';
 import { computed } from 'vue';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+} from '@starter-solutions/vue-ui/base/alert';
 
 type Props = {
     errors: string[];

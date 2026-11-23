@@ -5,7 +5,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from '@starter-solutions/vue-ui/base/sidebar';
 import { toUrl } from '@/lib/utils';
 import type { NavItem } from '@/types';
 
