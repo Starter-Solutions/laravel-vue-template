@@ -29,11 +29,15 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         Inertia::handleExceptionsUsing(function (ExceptionResponse $exception): ?ExceptionResponse {
-            if ($exception->statusCode() !== 404 || $exception->response instanceof JsonResponse) {
+            if ($exception->response instanceof JsonResponse) {
                 return null;
             }
 
-            return $exception->render('NotFound');
+            return match (true) {
+                $exception->statusCode() === 404 => $exception->render('NotFound'),
+                $exception->statusCode() === 500 && app()->isProduction() => $exception->render('ServerError'),
+                default => null,
+            };
         });
     }
 

@@ -13,6 +13,7 @@ void createInertiaApp({
         switch (true) {
             case name === 'Welcome':
             case name === 'NotFound':
+            case name === 'ServerError':
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
