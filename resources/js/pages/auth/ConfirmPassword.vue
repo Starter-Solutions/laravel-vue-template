@@ -6,11 +6,12 @@ import { Button } from '@starter-solutions/vue-ui/base/button';
 import { Label } from '@starter-solutions/vue-ui/base/label';
 import { Spinner } from '@starter-solutions/vue-ui/base/spinner';
 import { store } from '@/routes/password/confirm';
-import {
-    index as confirmOptions,
-    store as confirmStore,
-} from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyConfirmationController';
 import PasskeyVerify from '@/components/PasskeyVerify.vue';
+import type { PasskeyRoutes } from '@/types';
+
+defineProps<{
+    passkeyRoutes: PasskeyRoutes | null;
+}>();
 
 defineOptions({
     layout: {
@@ -25,10 +26,8 @@ defineOptions({
     <Head title="Confirm password" />
 
     <PasskeyVerify
-        :routes="{
-            options: confirmOptions(),
-            submit: confirmStore(),
-        }"
+        v-if="passkeyRoutes"
+        :routes="passkeyRoutes"
         label="Confirm with passkey"
         loading-label="Confirming..."
         separator="Or confirm with password"

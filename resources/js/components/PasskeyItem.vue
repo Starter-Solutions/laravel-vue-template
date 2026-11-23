@@ -18,14 +18,14 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    remove: [id: number, onError: () => void];
+    remove: [url: string, onError: () => void];
 }>();
 
 const isDeleting = ref(false);
 
 const handleDelete = () => {
     isDeleting.value = true;
-    emit('remove', props.passkey.id, () => {
+    emit('remove', props.passkey.deleteUrl, () => {
         isDeleting.value = false;
     });
 };

@@ -5,6 +5,11 @@ import InputError from '@/components/InputError.vue';
 import { Button } from '@starter-solutions/vue-ui/base/button';
 import { Input } from '@starter-solutions/vue-ui/base/input';
 import { Label } from '@starter-solutions/vue-ui/base/label';
+import type { PasskeyRoutes } from '@/types';
+
+const props = defineProps<{
+    routes: PasskeyRoutes;
+}>();
 
 const emit = defineEmits<{
     success: [];
@@ -36,6 +41,7 @@ const name = ref(getDefaultPasskeyName());
 const showForm = ref(false);
 
 const { register, isLoading, error, isSupported } = usePasskeyRegister({
+    routes: props.routes,
     onSuccess: () => {
         name.value = '';
         showForm.value = false;

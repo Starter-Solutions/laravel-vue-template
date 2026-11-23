@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
 import { KeyRound } from '@lucide/vue';
-import type { Passkey } from '@/types/auth';
+import type { Passkey, PasskeyRoutes } from '@/types/auth';
 import Heading from '@/components/Heading.vue';
 import PasskeyItem from '@/components/PasskeyItem.vue';
 import PasskeyRegister from '@/components/PasskeyRegister.vue';
-import { destroy } from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyRegistrationController';
 
-export type Props = {
-    canManagePasskeys?: boolean;
-    passkeys?: Passkey[];
-};
+defineProps<{
+    routes: PasskeyRoutes;
+    passkeys: Passkey[];
+}>();
 
-withDefaults(defineProps<Props>(), {
-    canManagePasskeys: false,
-    passkeys: () => [],
-});
-
-const handleDelete = (id: number, onError: () => void) => {
-    router.delete(destroy.url(id), {
+const handleDelete = (url: string, onError: () => void) => {
+    router.delete(url, {
         preserveScroll: true,
         onError,
     });
@@ -30,7 +24,7 @@ const handleRegisterSuccess = () => {
 </script>
 
 <template>
-    <div v-if="canManagePasskeys" class="space-y-6">
+    <div class="space-y-6">
         <Heading
             variant="small"
             title="Passkeys"
@@ -60,6 +54,6 @@ const handleRegisterSuccess = () => {
             </div>
         </div>
 
-        <PasskeyRegister @success="handleRegisterSuccess" />
+        <PasskeyRegister :routes="routes" @success="handleRegisterSuccess" />
     </div>
 </template>

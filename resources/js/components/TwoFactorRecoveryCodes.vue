@@ -12,9 +12,15 @@ import {
     CardTitle,
 } from '@starter-solutions/vue-ui/base/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { regenerateRecoveryCodes } from '@/routes/two-factor';
+import type { TwoFactorRoutes } from '@/types';
 
-const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
+const props = defineProps<{
+    routes: TwoFactorRoutes;
+}>();
+
+const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth(
+    props.routes,
+);
 const isRecoveryCodesVisible = ref<boolean>(false);
 const recoveryCodeSectionRef = useTemplateRef('recoveryCodeSectionRef');
 
@@ -64,7 +70,7 @@ onMounted(async () => {
 
                 <Form
                     v-if="isRecoveryCodesVisible && recoveryCodesList.length"
-                    v-bind="regenerateRecoveryCodes.form()"
+                    :action="routes.regenerateRecoveryCodes"
                     method="post"
                     :options="{ preserveScroll: true }"
                     @success="fetchRecoveryCodes"

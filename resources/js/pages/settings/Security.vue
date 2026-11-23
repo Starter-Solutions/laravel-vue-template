@@ -7,16 +7,18 @@ import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@starter-solutions/vue-ui/base/button';
 import { Label } from '@starter-solutions/vue-ui/base/label';
 import { edit } from '@/routes/security';
-import type { Props as ManagePasskeysProps } from '@/components/ManagePasskeys.vue';
 import ManagePasskeys from '@/components/ManagePasskeys.vue';
-import type { Props as ManageTwoFactorProps } from '@/components/ManageTwoFactor.vue';
 import ManageTwoFactor from '@/components/ManageTwoFactor.vue';
+import type { Passkey, PasskeyRoutes, TwoFactorRoutes } from '@/types';
 
-// oxfmt-ignore
 type Props = {
     passwordRules: string;
-} & ManagePasskeysProps &
-    ManageTwoFactorProps;
+    passkeys: Passkey[];
+    passkeyRoutes: PasskeyRoutes | null;
+    twoFactorRoutes: TwoFactorRoutes | null;
+    requiresConfirmation?: boolean;
+    twoFactorEnabled?: boolean;
+};
 
 const props = defineProps<Props>();
 
@@ -108,13 +110,15 @@ defineOptions({
     </div>
 
     <ManageTwoFactor
-        :canManageTwoFactor="canManageTwoFactor"
+        v-if="twoFactorRoutes"
+        :routes="twoFactorRoutes"
         :requiresConfirmation="requiresConfirmation"
         :twoFactorEnabled="twoFactorEnabled"
     />
 
     <ManagePasskeys
-        :canManagePasskeys="canManagePasskeys"
+        v-if="passkeyRoutes"
+        :routes="passkeyRoutes"
         :passkeys="passkeys"
     />
 </template>

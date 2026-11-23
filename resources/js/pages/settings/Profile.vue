@@ -10,7 +10,10 @@ import { Button } from '@starter-solutions/vue-ui/base/button';
 import { Input } from '@starter-solutions/vue-ui/base/input';
 import { Label } from '@starter-solutions/vue-ui/base/label';
 import { edit } from '@/routes/profile';
-import { send } from '@/routes/verification';
+
+defineProps<{
+    verificationUrl: string | null;
+}>();
 
 defineOptions({
     layout: {
@@ -73,11 +76,12 @@ const user = computed(() => page.props.auth.user);
                 <InputError class="mt-2" :message="errors.email" />
             </div>
 
-            <div v-if="page.props.mustVerifyEmail && !user.email_verified_at">
+            <div v-if="verificationUrl && !user.email_verified_at">
                 <p class="-mt-4 text-sm text-muted-foreground">
                     Your email address is unverified.
                     <Link
-                        :href="send()"
+                        :href="verificationUrl"
+                        method="post"
                         as="button"
                         class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                     >

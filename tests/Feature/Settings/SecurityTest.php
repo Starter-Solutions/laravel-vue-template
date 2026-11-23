@@ -7,6 +7,7 @@ use Laravel\Fortify\Features;
 
 test('security page is displayed', function () {
     $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
+    $this->skipUnlessFortifyHas(Features::passkeys());
 
     Features::twoFactorAuthentication([
         'confirm' => true,
@@ -23,22 +24,17 @@ test('security page is displayed', function () {
         ->get(route('security.edit'))
         ->assertInertia(fn (Assert $page) => $page
             ->component('settings/Security')
-            ->where('canManagePasskeys', true)
+            ->where('passkeyRoutes.options', '/user/passkeys/options')
+            ->where('passkeyRoutes.submit', '/user/passkeys')
             ->where('passkeys', [])
-            ->where('canManageTwoFactor', true)
+            ->where('twoFactorRoutes.enable', '/user/two-factor-authentication')
+            ->where('twoFactorRoutes.recoveryCodes', '/user/two-factor-recovery-codes')
             ->where('twoFactorEnabled', false),
         );
 });
 
 test('security page requires password confirmation when enabled', function () {
-    $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
-
     $user = User::factory()->create();
-
-    Features::twoFactorAuthentication([
-        'confirm' => true,
-        'confirmPassword' => true,
-    ]);
 
     $response = $this->actingAs($user)
         ->get(route('security.edit'));
@@ -46,9 +42,7 @@ test('security page requires password confirmation when enabled', function () {
     $response->assertRedirect(route('password.confirm'));
 });
 
-test('security page renders without two factor when feature is disabled', function () {
-    $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
-
+test('security page renders without two factor or passkeys when both features are disabled', function () {
     config(['fortify.features' => []]);
 
     $user = User::factory()->create();
@@ -59,9 +53,9 @@ test('security page renders without two factor when feature is disabled', functi
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('settings/Security')
-            ->where('canManagePasskeys', false)
+            ->where('passkeyRoutes', null)
             ->where('passkeys', [])
-            ->where('canManageTwoFactor', false)
+            ->where('twoFactorRoutes', null)
             ->missing('twoFactorEnabled')
             ->missing('requiresConfirmation'),
         );

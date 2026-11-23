@@ -8,10 +8,9 @@ import { Checkbox } from '@starter-solutions/vue-ui/base/checkbox';
 import { Input } from '@starter-solutions/vue-ui/base/input';
 import { Label } from '@starter-solutions/vue-ui/base/label';
 import { Spinner } from '@starter-solutions/vue-ui/base/spinner';
-import { register } from '@/routes';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
 import PasskeyVerify from '@/components/PasskeyVerify.vue';
+import type { PasskeyRoutes } from '@/types';
 
 defineOptions({
     layout: {
@@ -22,7 +21,8 @@ defineOptions({
 
 defineProps<{
     status?: string;
-    canResetPassword: boolean;
+    resetPasswordUrl: string | null;
+    passkeyRoutes: PasskeyRoutes | null;
 }>();
 </script>
 
@@ -36,7 +36,7 @@ defineProps<{
         {{ status }}
     </div>
 
-    <PasskeyVerify />
+    <PasskeyVerify v-if="passkeyRoutes" :routes="passkeyRoutes" />
 
     <Form
         v-bind="store.form()"
@@ -64,8 +64,8 @@ defineProps<{
                 <div class="flex items-center justify-between">
                     <Label for="password">Password</Label>
                     <TextLink
-                        v-if="canResetPassword"
-                        :href="request()"
+                        v-if="resetPasswordUrl"
+                        :href="resetPasswordUrl"
                         class="text-sm"
                         :tabindex="5"
                     >
@@ -102,9 +102,14 @@ defineProps<{
             </Button>
         </div>
 
-        <div class="text-center text-sm text-muted-foreground">
+        <div
+            v-if="$page.props.auth.registrationUrl"
+            class="text-center text-sm text-muted-foreground"
+        >
             Don't have an account?
-            <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+            <TextLink :href="$page.props.auth.registrationUrl" :tabindex="5">
+                Sign up
+            </TextLink>
         </div>
     </Form>
 </template>

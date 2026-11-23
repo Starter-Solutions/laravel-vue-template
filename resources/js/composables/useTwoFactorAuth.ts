@@ -1,7 +1,7 @@
 import { useHttp } from '@inertiajs/vue3';
 import type { ComputedRef, Ref } from 'vue';
 import { computed, ref } from 'vue';
-import { qrCode, recoveryCodes, secretKey } from '@/routes/two-factor';
+import type { TwoFactorRoutes } from '@/types';
 
 export type UseTwoFactorAuthReturn = {
     qrCodeSvg: Ref<string | null>;
@@ -27,12 +27,14 @@ const hasSetupData = computed<boolean>(
     () => qrCodeSvg.value !== null && manualSetupKey.value !== null,
 );
 
-export const useTwoFactorAuth = (): UseTwoFactorAuthReturn => {
+export const useTwoFactorAuth = (
+    routes: TwoFactorRoutes,
+): UseTwoFactorAuthReturn => {
     const http = useHttp();
 
     const fetchQrCode = async (): Promise<void> => {
         try {
-            const { svg } = (await http.submit(qrCode())) as {
+            const { svg } = (await http.get(routes.qrCode)) as {
                 svg: string;
                 url: string;
             };
@@ -46,7 +48,7 @@ export const useTwoFactorAuth = (): UseTwoFactorAuthReturn => {
 
     const fetchSetupKey = async (): Promise<void> => {
         try {
-            const { secretKey: key } = (await http.submit(secretKey())) as {
+            const { secretKey: key } = (await http.get(routes.secretKey)) as {
                 secretKey: string;
             };
 
@@ -76,8 +78,8 @@ export const useTwoFactorAuth = (): UseTwoFactorAuthReturn => {
     const fetchRecoveryCodes = async (): Promise<void> => {
         try {
             clearErrors();
-            recoveryCodesList.value = (await http.submit(
-                recoveryCodes(),
+            recoveryCodesList.value = (await http.get(
+                routes.recoveryCodes,
             )) as string[];
         } catch {
             errors.value.push('Failed to fetch recovery codes');

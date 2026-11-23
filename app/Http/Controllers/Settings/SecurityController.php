@@ -18,10 +18,15 @@ class SecurityController extends Controller
      */
     public function edit(TwoFactorAuthenticationRequest $request): Response
     {
+        $canManagePasskeys = Features::canManagePasskeys();
+
         $props = [
-            'canManageTwoFactor' => Features::canManageTwoFactorAuthentication(),
-            'canManagePasskeys' => Features::canManagePasskeys(),
-            'passkeys' => Features::canManagePasskeys()
+            'twoFactorRoutes' => null,
+            'passkeyRoutes' => $canManagePasskeys ? [
+                'options' => route('passkey.registration-options', absolute: false),
+                'submit' => route('passkey.store', absolute: false),
+            ] : null,
+            'passkeys' => $canManagePasskeys
                 ? $request->user()
                     ->passkeys()
                     ->select(['id', 'name', 'credential', 'created_at', 'last_used_at'])
@@ -30,6 +35,7 @@ class SecurityController extends Controller
                     ->map(fn ($passkey) => [
                         'id' => $passkey->id,
                         'name' => $passkey->name,
+                        'deleteUrl' => route('passkey.destroy', ['passkey' => $passkey], absolute: false),
                         'authenticator' => $passkey->authenticator,
                         'created_at_diff' => $passkey->created_at->diffForHumans(),
                         'last_used_at_diff' => $passkey->last_used_at?->diffForHumans(),
@@ -43,6 +49,15 @@ class SecurityController extends Controller
         if (Features::canManageTwoFactorAuthentication()) {
             $request->ensureStateIsValid();
 
+            $props['twoFactorRoutes'] = [
+                'enable' => route('two-factor.enable', absolute: false),
+                'disable' => route('two-factor.disable', absolute: false),
+                'confirm' => route('two-factor.confirm', absolute: false),
+                'qrCode' => route('two-factor.qr-code', absolute: false),
+                'secretKey' => route('two-factor.secret-key', absolute: false),
+                'recoveryCodes' => route('two-factor.recovery-codes', absolute: false),
+                'regenerateRecoveryCodes' => route('two-factor.regenerate-recovery-codes', absolute: false),
+            ];
             $props['twoFactorEnabled'] = $request->user()->hasEnabledTwoFactorAuthentication();
             $props['requiresConfirmation'] = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
         }

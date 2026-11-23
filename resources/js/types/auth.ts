@@ -12,14 +12,31 @@ export type User = {
 
 export type Auth = {
     user: User;
+    registrationUrl: string | null;
+};
+
+export type PasskeyRoutes = {
+    options: string;
+    submit: string;
 };
 
 export type Passkey = {
     id: number;
     name: string;
+    deleteUrl: string;
     authenticator: string | null;
     created_at_diff: string;
     last_used_at_diff: string | null;
+};
+
+export type TwoFactorRoutes = {
+    enable: string;
+    disable: string;
+    confirm: string;
+    qrCode: string;
+    secretKey: string;
+    recoveryCodes: string;
+    regenerateRecoveryCodes: string;
 };
 
 export type TwoFactorConfigContent = {

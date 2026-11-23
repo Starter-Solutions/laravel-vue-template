@@ -21,10 +21,10 @@ import {
 import { Spinner } from '@starter-solutions/vue-ui/base/spinner';
 import { useAppearance } from '@/composables/useAppearance';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { confirm } from '@/routes/two-factor';
-import type { TwoFactorConfigContent } from '@/types';
+import type { TwoFactorConfigContent, TwoFactorRoutes } from '@/types';
 
 type Props = {
+    routes: TwoFactorRoutes;
     requiresConfirmation: boolean;
     twoFactorEnabled: boolean;
 };
@@ -36,7 +36,7 @@ const isOpen = defineModel<boolean>('isOpen');
 
 const { copy, copied } = useClipboard();
 const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData, errors } =
-    useTwoFactorAuth();
+    useTwoFactorAuth(props.routes);
 
 const showVerificationStep = ref(false);
 const code = ref<string>('');
@@ -238,7 +238,8 @@ watch(
 
                 <template v-else>
                     <Form
-                        v-bind="confirm.form()"
+                        :action="routes.confirm"
+                        method="post"
                         error-bag="confirmTwoFactorAuthentication"
                         reset-on-error
                         @finish="code = ''"

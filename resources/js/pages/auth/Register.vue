@@ -8,9 +8,9 @@ import { Input } from '@starter-solutions/vue-ui/base/input';
 import { Label } from '@starter-solutions/vue-ui/base/label';
 import { Spinner } from '@starter-solutions/vue-ui/base/spinner';
 import { login } from '@/routes';
-import { store } from '@/routes/register';
 
 defineProps<{
+    submitUrl: string;
     passwordRules: string;
 }>();
 
@@ -26,7 +26,8 @@ defineOptions({
     <Head title="Register" />
 
     <Form
-        v-bind="store.form()"
+        :action="submitUrl"
+        method="post"
         :reset-on-success="['password', 'password_confirmation']"
         v-slot="{ errors, processing }"
         class="flex flex-col gap-6"

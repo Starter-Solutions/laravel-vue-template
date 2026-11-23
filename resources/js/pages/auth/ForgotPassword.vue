@@ -7,7 +7,6 @@ import { Input } from '@starter-solutions/vue-ui/base/input';
 import { Label } from '@starter-solutions/vue-ui/base/label';
 import { Spinner } from '@starter-solutions/vue-ui/base/spinner';
 import { login } from '@/routes';
-import { email } from '@/routes/password';
 
 defineOptions({
     layout: {
@@ -17,6 +16,7 @@ defineOptions({
 });
 
 defineProps<{
+    submitUrl: string;
     status?: string;
 }>();
 </script>
@@ -32,7 +32,7 @@ defineProps<{
     </div>
 
     <div class="space-y-6">
-        <Form v-bind="email.form()" v-slot="{ errors, processing }">
+        <Form :action="submitUrl" method="post" v-slot="{ errors, processing }">
             <div class="grid gap-2">
                 <Label for="email">Email address</Label>
                 <Input

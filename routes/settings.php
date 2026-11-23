@@ -4,6 +4,7 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Auth\Middleware\RequirePassword;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Features;
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', '/settings/profile');
@@ -27,6 +28,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('.well-known/passkey-endpoints', function () {
+    abort_unless(Features::canManagePasskeys(), 404);
+
     return response()->json([
         'enroll' => route('security.edit'),
         'manage' => route('security.edit'),

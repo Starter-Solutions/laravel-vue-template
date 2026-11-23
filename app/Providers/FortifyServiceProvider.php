@@ -7,6 +7,7 @@ use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -49,31 +50,48 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureViews(): void
     {
         Fortify::loginView(fn (Request $request) => Inertia::render('auth/Login', [
-            'canResetPassword' => Features::enabled(Features::resetPasswords()),
+            'resetPasswordUrl' => Features::enabled(Features::resetPasswords()) && Route::has('password.request')
+                ? route('password.request', absolute: false)
+                : null,
+            'passkeyRoutes' => Features::canManagePasskeys() ? [
+                'options' => route('passkey.login-options', absolute: false),
+                'submit' => route('passkey.login', absolute: false),
+            ] : null,
             'status' => $request->session()->get('status'),
         ]));
 
         Fortify::resetPasswordView(fn (Request $request) => Inertia::render('auth/ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
+            'submitUrl' => route('password.update', absolute: false),
             'passwordRules' => Password::defaults()->toPasswordRulesString(),
         ]));
 
         Fortify::requestPasswordResetLinkView(fn (Request $request) => Inertia::render('auth/ForgotPassword', [
+            'submitUrl' => route('password.email', absolute: false),
             'status' => $request->session()->get('status'),
         ]));
 
         Fortify::verifyEmailView(fn (Request $request) => Inertia::render('auth/VerifyEmail', [
+            'submitUrl' => route('verification.send', absolute: false),
             'status' => $request->session()->get('status'),
         ]));
 
         Fortify::registerView(fn () => Inertia::render('auth/Register', [
+            'submitUrl' => route('register.store', absolute: false),
             'passwordRules' => Password::defaults()->toPasswordRulesString(),
         ]));
 
-        Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
+        Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge', [
+            'submitUrl' => route('two-factor.login.store', absolute: false),
+        ]));
 
-        Fortify::confirmPasswordView(fn () => Inertia::render('auth/ConfirmPassword'));
+        Fortify::confirmPasswordView(fn () => Inertia::render('auth/ConfirmPassword', [
+            'passkeyRoutes' => Features::canManagePasskeys() ? [
+                'options' => route('passkey.confirm-options', absolute: false),
+                'submit' => route('passkey.confirm', absolute: false),
+            ] : null,
+        ]));
     }
 
     /**
