@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
-const { isMobile, state } = useSidebar();
+const { isMobile, setOpenMobile, state } = useSidebar();
 </script>
 
 <template>
@@ -47,7 +47,10 @@ const { isMobile, state } = useSidebar();
                     align="end"
                     :side-offset="4"
                 >
-                    <UserMenuContent :user="user" />
+                    <UserMenuContent
+                        :user="user"
+                        @settings-selected="isMobile && setOpenMobile(false)"
+                    />
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarMenuItem>
