@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import {
-    BookOpen,
     FolderGit2,
+    Home,
     Layers,
     LayoutGrid,
     Shield,
@@ -55,13 +55,13 @@ const visibleNavGroups = computed(() =>
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        href: 'https://github.com/Starter-Solutions/laravel-vue-template',
         icon: FolderGit2,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        title: 'Home',
+        href: 'https://laravel-vue-template.on-forge.com/',
+        icon: Home,
     },
 ];
 </script>
