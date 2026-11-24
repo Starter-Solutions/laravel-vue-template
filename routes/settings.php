@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\NotificationController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Auth\Middleware\RequirePassword;
@@ -11,6 +12,20 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('settings/notifications', [NotificationController::class, 'edit'])->name('notifications.edit');
+    Route::patch('settings/notifications', [NotificationController::class, 'update'])->name('notifications.update');
+    Route::post('settings/notifications/subscriptions', [NotificationController::class, 'storeSubscription'])
+        ->middleware('throttle:10,1,web-push-subscription')
+        ->name('notifications.subscription.store');
+    Route::post('settings/notifications/subscriptions/current', [NotificationController::class, 'currentSubscription'])
+        ->name('notifications.subscription.current');
+    Route::delete('settings/notifications/subscriptions/{subscription}', [NotificationController::class, 'destroySubscription'])
+        ->whereNumber('subscription')
+        ->name('notifications.subscription.destroy');
+    Route::post('settings/notifications/test', [NotificationController::class, 'sendTest'])
+        ->middleware('throttle:5,1,web-push-test')
+        ->name('notifications.test');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

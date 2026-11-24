@@ -22,6 +22,14 @@ return [
         'key' => env('RESEND_API_KEY'),
     ],
 
+    'web_push' => [
+        'vapid' => [
+            'subject' => env('WEB_PUSH_VAPID_SUBJECT', 'mailto:'.env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+            'publicKey' => env('WEB_PUSH_VAPID_PUBLIC_KEY'),
+            'privateKey' => env('WEB_PUSH_VAPID_PRIVATE_KEY'),
+        ],
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

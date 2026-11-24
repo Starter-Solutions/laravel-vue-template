@@ -118,6 +118,7 @@ return [
         'pulse*',
         '_boost*',
         '.well-known*',
+        'settings/notifications/subscriptions*',
     ],
 
     'ignore_commands' => [
