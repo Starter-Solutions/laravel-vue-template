@@ -105,7 +105,9 @@ test('configured admin addresses are reserved during public registration and pro
         'email' => 'Future-Admin@example.test',
         'password' => 'password',
         'password_confirmation' => 'password',
-    ])->assertSessionHasErrors('email');
+    ])->assertSessionHasErrors([
+        'email' => 'This email address requires an invitation from an administrator.',
+    ]);
 
     $user = User::factory()->create();
     $this->actingAs($user)

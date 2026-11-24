@@ -28,6 +28,8 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$profileRules,
             'password' => $this->passwordRules(),
+        ], [
+            'email.prohibited' => __('This email address requires an invitation from an administrator.'),
         ])->validate();
 
         return User::create([
