@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AccountPasswordController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\WebAppManifestController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
+Route::get('manifest.webmanifest', WebAppManifestController::class)->name('pwa.manifest');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');

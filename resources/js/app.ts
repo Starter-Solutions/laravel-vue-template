@@ -42,3 +42,15 @@ initializeTheme();
 
 // This will listen for flash toast data from the server...
 initializeFlashToast();
+
+if (
+    import.meta.env.PROD &&
+    typeof window !== 'undefined' &&
+    'serviceWorker' in navigator
+) {
+    navigator.serviceWorker
+        .register('/service-worker.js')
+        .catch((error: unknown) => {
+            console.error('Service worker registration failed.', error);
+        });
+}
