@@ -9,5 +9,7 @@ test('returns a successful response', function () {
 test('links the app manifest from the home page', function () {
     $response = $this->get(route('home'));
 
-    $response->assertOk()->assertSee('<link rel="manifest" href="/manifest.webmanifest">', escape: false);
+    $response->assertOk()
+        ->assertSee('<link rel="manifest" href="/manifest.webmanifest"', escape: false)
+        ->assertSee('data-dark-href="/manifest.webmanifest?theme=dark"', escape: false);
 });

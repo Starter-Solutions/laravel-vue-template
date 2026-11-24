@@ -31,9 +31,30 @@
         </style>
 
         <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-        <link rel="manifest" href="{{ route('pwa.manifest', absolute: false) }}">
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" data-dark-href="/favicon-dark.svg">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" data-dark-href="/apple-touch-icon-dark.png">
+        <link rel="manifest" href="{{ route('pwa.manifest', absolute: false) }}"
+            data-dark-href="{{ route('pwa.manifest', ['theme' => 'dark'], absolute: false) }}">
+
+        <script>
+            (function() {
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+                for (const link of document.querySelectorAll('link[data-dark-href]')) {
+                    const lightHref = link.getAttribute('href');
+                    const updateHref = () => {
+                        const href = systemTheme.matches ? link.dataset.darkHref : lightHref;
+
+                        if (link.getAttribute('href') !== href) {
+                            link.setAttribute('href', href);
+                        }
+                    };
+
+                    updateHref();
+                    systemTheme.addEventListener('change', updateHref);
+                }
+            })();
+        </script>
 
         @fonts
 
